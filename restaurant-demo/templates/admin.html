@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة الطلبات | {{ c.name }}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@700&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+  <style>
+    .kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0 2rem; }
+    .kpi { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 1rem 1.2rem; }
+    .kpi b { display: block; font-size: 1.6rem; color: var(--ember); }
+    h3 { margin: 1.5rem 0 .6rem; }
+    .tbl { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); }
+    th, td { padding: .7rem .9rem; text-align: right; border-bottom: 1px solid var(--line); font-size: .92rem; vertical-align: top; }
+    th { background: var(--char); color: #fff; white-space: nowrap; }
+    td a { color: #16a34a; font-weight: 700; }
+    .empty { color: var(--muted); padding: 1rem 0; }
+  </style>
+</head>
+<body>
+  <div class="wrap section">
+    <h2>📊 لوحة {{ c.name }}</h2>
+    <div class="kpis">
+      <div class="kpi">طلبات أونلاين<b>{{ orders|length }}</b></div>
+      <div class="kpi">إجمالي المبيعات<b>{{ orders|map(attribute='total')|map('int')|sum }} ج</b></div>
+      <div class="kpi">حجوزات ترابيزات<b>{{ reservations|length }}</b></div>
+    </div>
+
+    <h3>🛒 الطلبات</h3>
+    {% if orders %}<div class="tbl"><table>
+      <tr><th>الوقت</th><th>العميل</th><th>العنوان</th><th>الأصناف</th><th>الإجمالي</th><th>ملاحظات</th></tr>
+      {% for o in orders %}
+      <tr><td>{{ o.created_at.replace('T', ' ') }}</td>
+        <td>{{ o.name }}<br><a dir="ltr" href="https://wa.me/2{{ o.phone[-11:] }}" target="_blank">{{ o.phone }}</a></td>
+        <td>{{ o.address }}</td><td>{% for l in o['items'].split(' | ') %}{{ l }}<br>{% endfor %}</td>
+        <td><b>{{ o.total }} ج</b></td><td>{{ o.notes }}</td></tr>
+      {% endfor %}
+    </table></div>{% else %}<p class="empty">لسه مفيش طلبات</p>{% endif %}
+
+    <h3>📅 الحجوزات</h3>
+    {% if reservations %}<div class="tbl"><table>
+      <tr><th>الوقت</th><th>العميل</th><th>الأفراد</th><th>اليوم</th><th>الساعة</th><th>ملاحظات</th></tr>
+      {% for r in reservations %}
+      <tr><td>{{ r.created_at.replace('T', ' ') }}</td>
+        <td>{{ r.name }}<br><a dir="ltr" href="https://wa.me/2{{ r.phone[-11:] }}" target="_blank">{{ r.phone }}</a></td>
+        <td>{{ r.guests }}</td><td>{{ r.date }}</td><td>{{ r.time }}</td><td>{{ r.notes }}</td></tr>
+      {% endfor %}
+    </table></div>{% else %}<p class="empty">لسه مفيش حجوزات</p>{% endif %}
+  </div>
+</body>
+</html>

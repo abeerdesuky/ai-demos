@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ c.name }} | {{ c.tagline }}</title>
+  <meta name="description" content="{{ c.name }} - {{ c.address }}. احجز ميعادك أونلاين أو اسأل المساعد الذكي.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="nav">
+    <div class="wrap nav-in">
+      <a href="#" class="logo"><span class="logo-mark">🦷</span>{{ c.name }}</a>
+      <nav class="links">
+        <a href="#services">الخدمات</a>
+        <a href="#doctors">الأطباء</a>
+        <a href="#faq">أسئلة شائعة</a>
+        <a href="#contact">تواصل</a>
+      </nav>
+      <a href="#book" class="btn btn-sm">احجز الآن</a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="wrap hero-in">
+      <div class="hero-text">
+        <span class="pill">✨ مساعد ذكي يرد عليك 24 ساعة</span>
+        <h1>{{ c.tagline }}</h1>
+        <p>رعاية متكاملة لأسنانك وأسنان أولادك بأحدث الأجهزة، ومن غير وجع. اسأل المساعد الذكي عن أي حاجة، أو احجز ميعادك في أقل من دقيقة.</p>
+        <div class="hero-cta">
+          <a href="#book" class="btn">احجز ميعادك</a>
+          <button class="btn btn-ghost" onclick="Chat.open()">💬 اسأل المساعد</button>
+        </div>
+        <ul class="stats">
+          <li><b>+12</b><span>سنة خبرة</span></li>
+          <li><b>+8000</b><span>مريض سعيد</span></li>
+          <li><b>4.9★</b><span>تقييم المرضى</span></li>
+        </ul>
+      </div>
+      <div class="hero-card">
+        <div class="hc-row"><span>🕒</span><div><b>المواعيد</b><p>{{ c.hours }}</p></div></div>
+        <div class="hc-row"><span>📍</span><div><b>العنوان</b><p>{{ c.address }}</p></div></div>
+        <div class="hc-row"><span>📞</span><div><b>للحجز والاستفسار</b><p dir="ltr">{{ c.phone }}</p></div></div>
+        <div class="hc-row"><span>💳</span><div><b>تقسيط وتأمين</b><p>تقسيط حتى 12 شهر وأغلب شركات التأمين</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="services" class="section">
+    <div class="wrap">
+      <h2>خدماتنا وأسعارنا</h2>
+      <p class="sub">أسعار واضحة من غير مفاجآت</p>
+      <div class="grid">
+        {% for s in c.services %}
+        <article class="card">
+          <h3>{{ s.name }}</h3>
+          <p>{{ s.desc }}</p>
+          <div class="price">{{ s.price }}</div>
+        </article>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section id="doctors" class="section alt">
+    <div class="wrap">
+      <h2>فريق الأطباء</h2>
+      <p class="sub">استشاريين وأخصائيين في كل التخصصات</p>
+      <div class="grid docs">
+        {% for d in c.doctors %}
+        <article class="card doc">
+          <div class="avatar">{{ d.name.split()[1][0] }}</div>
+          <h3>{{ d.name }}</h3>
+          <p class="muted">{{ d.title }}</p>
+          <p class="days">📅 {{ d.days }}</p>
+        </article>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" class="section">
+    <div class="wrap narrow">
+      <h2>أسئلة شائعة</h2>
+      {% for f in c.faq %}
+      <details class="faq"><summary>{{ f.q }}</summary><p>{{ f.a }}</p></details>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section id="book" class="section alt">
+    <div class="wrap narrow">
+      <h2>احجز ميعادك</h2>
+      <p class="sub">اكتب بياناتك وهنكلمك نأكد المعاد</p>
+      <form id="bookForm" class="form">
+        <div class="row">
+          <label>الاسم<input name="name" required minlength="2" placeholder="اسمك بالكامل"></label>
+          <label>رقم الموبايل<input name="phone" required inputmode="tel" dir="ltr" placeholder="01xxxxxxxxx"></label>
+        </div>
+        <div class="row">
+          <label>الخدمة
+            <select name="service">
+              {% for s in c.services %}<option>{{ s.name }}</option>{% endfor %}
+            </select>
+          </label>
+          <label>اليوم المناسب<input name="date" type="date"></label>
+        </div>
+        <label>ملاحظات (اختياري)<textarea name="notes" rows="3" placeholder="مثلاً: عندي وجع في ضرس العقل"></textarea></label>
+        <button class="btn btn-block" type="submit">تأكيد الحجز</button>
+        <p id="bookMsg" class="form-msg" role="status"></p>
+      </form>
+    </div>
+  </section>
+
+  <footer id="contact" class="footer">
+    <div class="wrap foot-in">
+      <div>
+        <div class="logo"><span class="logo-mark">🦷</span>{{ c.name }}</div>
+        <p>{{ c.address }}</p>
+        <p dir="ltr" class="ltr-right">{{ c.phone }}</p>
+      </div>
+      <a class="btn btn-wa" href="https://wa.me/{{ c.whatsapp }}" target="_blank" rel="noopener">واتساب</a>
+    </div>
+    <p class="demo-note">موقع تجريبي لعرض الإمكانيات — كل البيانات والأسماء وهمية</p>
+  </footer>
+
+  <!-- Chat widget -->
+  <button id="chatFab" class="chat-fab" aria-label="افتح المساعد">💬</button>
+  <div id="chatBox" class="chat" hidden>
+    <div class="chat-head">
+      <div><b>مساعد {{ c.name }}</b><small>● متاح دلوقتي</small></div>
+      <button class="chat-x" aria-label="إغلاق" onclick="Chat.close()">✕</button>
+    </div>
+    <div id="chatLog" class="chat-log" aria-live="polite"></div>
+    <div id="chatSug" class="chat-sug"></div>
+    <form id="chatForm" class="chat-in">
+      <input id="chatInput" autocomplete="off" maxlength="500" placeholder="اكتب سؤالك...">
+      <button aria-label="إرسال">➤</button>
+    </form>
+  </div>
+
+  <script src="/static/chat.js"></script>
+</body>
+</html>

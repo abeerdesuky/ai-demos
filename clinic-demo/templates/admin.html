@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة الحجوزات | {{ c.name }}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+  <style>
+    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); }
+    th, td { padding: .75rem 1rem; text-align: right; border-bottom: 1px solid var(--line); font-size: .95rem; }
+    th { background: var(--brand); color: #fff; }
+    tr:hover td { background: var(--brand-soft); }
+    .empty { text-align: center; color: var(--muted); padding: 3rem; }
+  </style>
+</head>
+<body style="background: var(--alt)">
+  <div class="wrap section">
+    <h2>📋 طلبات الحجز</h2>
+    <p class="sub">{{ c.name }} — عدد الطلبات: {{ rows|length }}</p>
+    {% if rows %}
+    <table>
+      <tr><th>الوقت</th><th>الاسم</th><th>الموبايل</th><th>الخدمة</th><th>اليوم</th><th>ملاحظات</th></tr>
+      {% for r in rows %}
+      <tr><td>{{ r.created_at.replace('T', ' ') }}</td><td>{{ r.name }}</td>
+        <td dir="ltr"><a href="https://wa.me/2{{ r.phone[-11:] }}" target="_blank">{{ r.phone }}</a></td>
+        <td>{{ r.service }}</td><td>{{ r.date }}</td><td>{{ r.notes }}</td></tr>
+      {% endfor %}
+    </table>
+    {% else %}<p class="empty">لسه مفيش طلبات</p>{% endif %}
+  </div>
+</body>
+</html>

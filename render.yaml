@@ -1,0 +1,40 @@
+# Render Blueprint: بيطلّع التلات ديموهات مرة واحدة (New > Blueprint)
+services:
+  - type: web
+    name: clinic-ai-demo
+    runtime: python
+    plan: free
+    rootDir: clinic-demo
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: ADMIN_TOKEN
+        generateValue: true
+
+  - type: web
+    name: restaurant-ai-demo
+    runtime: python
+    plan: free
+    rootDir: restaurant-demo
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: ADMIN_TOKEN
+        generateValue: true
+
+  - type: web
+    name: realestate-ai-demo
+    runtime: python
+    plan: free
+    rootDir: realestate-demo
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: ADMIN_TOKEN
+        generateValue: true

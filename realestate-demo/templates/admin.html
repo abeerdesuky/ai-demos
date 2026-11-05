@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>العملاء المحتملين | {{ c.name }}</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+  <style>
+    .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin: 1.4rem 0 1.8rem; }
+    .kpi { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 1rem 1.2rem; }
+    .kpi b { display: block; font-size: 1.7rem; color: var(--navy); }
+    .tbl { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); }
+    th, td { padding: .7rem .9rem; text-align: right; border-bottom: 1px solid var(--line); font-size: .9rem; vertical-align: top; }
+    th { background: var(--navy); color: #fff; white-space: nowrap; }
+    td a { color: #15803d; font-weight: 700; }
+    .badge { white-space: nowrap; border-radius: 999px; padding: .1rem .6rem; font-weight: 700; font-size: .82rem; }
+    .b-hot { background: #fee2e2; color: #b91c1c; } .b-warm { background: #fef3c7; color: #92400e; } .b-cold { background: #e0f2fe; color: #075985; }
+    .empty { color: var(--muted); padding: 2rem 0; }
+  </style>
+</head>
+<body>
+  <div class="wrap section">
+    <h2>📋 العملاء المحتملين — {{ c.name }}</h2>
+    <p class="muted">مترتبين حسب درجة الجدية، عشان فريق المبيعات يبدأ بالأهم.</p>
+    <div class="kpis">
+      <div class="kpi">إجمالي العملاء<b>{{ rows|length }}</b></div>
+      {% for k, v in counts.items() %}<div class="kpi">{{ k }}<b>{{ v }}</b></div>{% endfor %}
+    </div>
+    {% if rows %}<div class="tbl"><table>
+      <tr><th>التقييم</th><th>العميل</th><th>الوحدة</th><th>الميزانية</th><th>الشراء إمتى</th><th>الدفع</th><th>ملاحظات</th><th>المصدر</th><th>الوقت</th></tr>
+      {% for r in rows %}
+      <tr>
+        <td><span class="badge {{ 'b-hot' if 'ساخن' in r.label else 'b-warm' if 'مهتم' in r.label else 'b-cold' }}">{{ r.label }} ({{ r.score }})</span></td>
+        <td>{{ r.name }}<br><a dir="ltr" href="https://wa.me/2{{ r.phone[-11:] }}" target="_blank">{{ r.phone }}</a></td>
+        <td>{{ r.listing or '—' }}</td>
+        <td>{{ (r.budget|int / 1000000)|round(1) ~ ' مليون' if r.budget|int else '—' }}</td>
+        <td>{{ r.timeline }}</td><td>{{ r.payment }}</td><td>{{ r.notes }}</td>
+        <td>{{ '💬 الشات' if r.source == 'chat' else '📝 فورم' }}</td>
+        <td>{{ r.created_at.replace('T', ' ') }}</td>
+      </tr>
+      {% endfor %}
+    </table></div>{% else %}<p class="empty">لسه مفيش عملاء</p>{% endif %}
+  </div>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ c.name }} | {{ c.tagline }}</title>
+  <meta name="description" content="{{ c.name }} - مشويات وأكل شرقي. اطلب أونلاين واتساب أو احجز ترابيزتك.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@600;700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="nav">
+    <div class="wrap nav-in">
+      <a href="#" class="logo">🔥 {{ c.name }}</a>
+      <nav class="links">
+        <a href="#menu">المنيو</a>
+        <a href="#delivery">التوصيل</a>
+        <a href="#reserve">احجز ترابيزة</a>
+        <a href="#faq">أسئلة</a>
+      </nav>
+      <a href="#menu" class="btn btn-sm">اطلب دلوقتي</a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="wrap hero-in">
+      <div>
+        <span class="pill">🤖 اسأل المساعد يرشحلك أكلتك</span>
+        <h1>{{ c.tagline }}</h1>
+        <p>مشويات على الفحم، مقبلات شامي، وحلويات سخنة من الفرن. اطلب أونلاين والأوردر يوصل واتساب في ثانية، أو احجز ترابيزتك.</p>
+        <div class="hero-cta">
+          <a href="#menu" class="btn">شوف المنيو</a>
+          <button class="btn btn-ghost" onclick="Chat.open()">💬 محتار تاكل إيه؟</button>
+        </div>
+      </div>
+      <div class="plate" aria-hidden="true">
+        <div class="plate-in">🍖</div>
+        <span class="chip c1">🥙 شاورما</span>
+        <span class="chip c2">🔥 على الفحم</span>
+        <span class="chip c3">🍮 أم علي</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="delivery" class="strip">
+    <div class="wrap strip-in">
+      <div><b>🛵 التوصيل</b><span>{{ c.delivery.time }}</span></div>
+      <div><b>📍 بنوصّل لـ</b><span>{{ c.delivery.areas }}</span></div>
+      <div><b>💸 مصاريف التوصيل</b><span>{{ c.delivery.fee }}</span></div>
+      <div><b>🕐 مواعيدنا</b><span>{{ c.hours }}</span></div>
+    </div>
+  </section>
+
+  <section id="menu" class="section">
+    <div class="wrap">
+      <h2>المنيو</h2>
+      <div class="tabs" role="tablist">
+        {% for cat in c.menu %}
+        <button class="tab{% if loop.first %} on{% endif %}" data-cat="cat{{ loop.index }}">{{ cat.icon }} {{ cat.category }}</button>
+        {% endfor %}
+      </div>
+      {% for cat in c.menu %}
+      <div class="items{% if not loop.first %} hide{% endif %}" id="cat{{ loop.index }}">
+        {% for it in cat["items"] %}
+        <article class="item">
+          <div class="item-ico">{{ cat.icon }}</div>
+          <div class="item-body">
+            <h3>{{ it.name }}{% if 'مشهور' in it.tags %} <span class="hot">الأكثر طلبًا</span>{% endif %}</h3>
+            <p>{{ it.desc }}</p>
+            <div class="item-foot">
+              <b>{{ it.price }} ج</b>
+              <button class="add" data-id="{{ it.id }}">+ أضف</button>
+            </div>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section id="reserve" class="section dark">
+    <div class="wrap narrow">
+      <h2>احجز ترابيزتك</h2>
+      <p class="sub">للعزومات وأعياد الميلاد عندنا قاعة لحد 40 فرد</p>
+      <form id="resForm" class="form">
+        <div class="row">
+          <label>الاسم<input name="name" required minlength="2"></label>
+          <label>الموبايل<input name="phone" required inputmode="tel" dir="ltr" placeholder="01xxxxxxxxx"></label>
+        </div>
+        <div class="row three">
+          <label>عدد الأفراد<input name="guests" type="number" min="1" max="40" value="2" required></label>
+          <label>اليوم<input name="date" type="date" required></label>
+          <label>الساعة<input name="time" type="time" required value="20:00"></label>
+        </div>
+        <label>ملاحظات<textarea name="notes" rows="2" placeholder="مثلاً: عيد ميلاد، محتاجين كرسي أطفال"></textarea></label>
+        <button class="btn btn-block">تأكيد الحجز</button>
+        <p class="form-msg" role="status"></p>
+      </form>
+    </div>
+  </section>
+
+  <section id="faq" class="section">
+    <div class="wrap narrow">
+      <h2>أسئلة بتتسأل كتير</h2>
+      {% for f in c.faq %}
+      <details class="faq"><summary>{{ f.q }}</summary><p>{{ f.a }}</p></details>
+      {% endfor %}
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="wrap foot-in">
+      <div>
+        <div class="logo">🔥 {{ c.name }}</div>
+        <p>{{ c.address }}</p>
+        <p dir="ltr" class="ltr-right">{{ c.phone }}</p>
+      </div>
+      <a class="btn btn-wa" href="https://wa.me/{{ c.whatsapp }}" target="_blank" rel="noopener">واتساب</a>
+    </div>
+    <p class="demo-note">موقع تجريبي لعرض الإمكانيات — كل البيانات والأسماء وهمية</p>
+  </footer>
+
+  <!-- Cart -->
+  <button id="cartFab" class="cart-fab" aria-label="السلة">🛒 <span id="cartCount">0</span></button>
+  <aside id="cart" class="cart" hidden>
+    <div class="cart-head"><b>🛒 سلتك</b><button class="x" onclick="Cart.close()" aria-label="إغلاق">✕</button></div>
+    <div id="cartList" class="cart-list"></div>
+    <div class="cart-sum">
+      <div><span>الأصناف</span><b id="sub">0 ج</b></div>
+      <div><span>التوصيل</span><b id="fee">0 ج</b></div>
+      <div class="tot"><span>الإجمالي</span><b id="tot">0 ج</b></div>
+      <small id="hint"></small>
+    </div>
+    <form id="orderForm" class="form slim">
+      <input name="name" required minlength="2" placeholder="الاسم">
+      <input name="phone" required inputmode="tel" dir="ltr" placeholder="01xxxxxxxxx">
+      <input name="address" required minlength="5" placeholder="العنوان بالتفصيل">
+      <input name="notes" placeholder="ملاحظات (اختياري)">
+      <button class="btn btn-wa btn-block">📲 اطلب على واتساب</button>
+      <p class="form-msg" role="status"></p>
+    </form>
+  </aside>
+
+  <!-- Chat -->
+  <button id="chatFab" class="chat-fab" aria-label="افتح المساعد">💬</button>
+  <div id="chatBox" class="chat" hidden>
+    <div class="chat-head">
+      <div><b>مساعد {{ c.name }}</b><small>● بيرد فورًا</small></div>
+      <button class="x" aria-label="إغلاق" onclick="Chat.close()">✕</button>
+    </div>
+    <div id="chatLog" class="chat-log" aria-live="polite"></div>
+    <div id="chatSug" class="chat-sug"></div>
+    <form id="chatForm" class="chat-in">
+      <input id="chatInput" autocomplete="off" maxlength="500" placeholder="اسأل عن أي أكلة...">
+      <button aria-label="إرسال">➤</button>
+    </form>
+  </div>
+
+  <script>window.MENU = {{ menu_json|safe }}; window.RULES = {fee: {{ fee }}, freeOver: {{ free_over }}, min: {{ min_order }}};</script>
+  <script src="/static/app.js"></script>
+</body>
+</html>

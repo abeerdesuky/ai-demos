@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ c.name }} | {{ c.tagline }}</title>
+  <meta name="description" content="{{ c.name }} - شقق وفلل وشاليهات ومكاتب للبيع والإيجار. ابحث بالكلام العادي واحجز معاينة.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="nav">
+    <div class="wrap nav-in">
+      <a href="#" class="logo"><span class="mark">م+</span>{{ c.name }}</a>
+      <nav class="links">
+        <a href="#units">الوحدات</a>
+        <a href="#calc">احسب قسطك</a>
+        <a href="#why">ليه إحنا</a>
+        <a href="#contact">تواصل</a>
+      </nav>
+      <button class="btn btn-sm" onclick="Lead.open()">احجز استشارة</button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="wrap">
+      <span class="pill">✨ بحث ذكي بالذكاء الاصطناعي</span>
+      <h1>{{ c.tagline }}</h1>
+      <p>اكتب اللي في دماغك زي ما بتتكلم، وإحنا نطلّعلك الوحدات المناسبة.</p>
+      <form id="smart" class="smart">
+        <input id="smartQ" placeholder="مثلاً: شقة 3 غرف في التجمع تحت 7 مليون بالتقسيط" autocomplete="off">
+        <button class="btn">🔍 ابحث</button>
+      </form>
+      <div class="examples">
+        {% for ex in ["فيلا في زايد", "شاليه على البحر", "إيجار مفروش في التجمع", "مقدم 5% وتقسيط 10 سنين", "مكتب في العاصمة"] %}
+        <button type="button" class="ex">{{ ex }}</button>
+        {% endfor %}
+      </div>
+      <ul class="stats">
+        <li><b>{{ listings|length }}</b><span>وحدة متاحة</span></li>
+        <li><b>{{ c.areas|length }}</b><span>مناطق</span></li>
+        <li><b>+1200</b><span>عميل اتسكّن</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="units" class="section">
+    <div class="wrap">
+      <div class="filters">
+        <div class="seg" role="group">
+          <button class="on" data-p="">الكل</button><button data-p="بيع">بيع</button><button data-p="إيجار">إيجار</button>
+        </div>
+        <select id="fType"><option value="">كل الأنواع</option>{% for t in types %}<option>{{ t }}</option>{% endfor %}</select>
+        <select id="fArea"><option value="">كل المناطق</option>{% for a in c.areas %}<option>{{ a.name }}</option>{% endfor %}</select>
+        <select id="fBeds"><option value="0">أي عدد غرف</option><option value="1">1+</option><option value="2">2+</option><option value="3">3+</option><option value="4">4+</option></select>
+        <select id="fMax"><option value="0">أي سعر</option><option value="3000000">حتى 3 مليون</option><option value="5000000">حتى 5 مليون</option><option value="8000000">حتى 8 مليون</option><option value="15000000">حتى 15 مليون</option></select>
+      </div>
+      <div id="aiNote" class="ai-note" hidden></div>
+      <p id="count" class="count"></p>
+      <div id="grid" class="grid"></div>
+    </div>
+  </section>
+
+  <section id="calc" class="section alt">
+    <div class="wrap calc">
+      <div>
+        <h2>احسب قسطك الشهري</h2>
+        <p class="muted">اعرف قبل ما تنزل تعاين، المقدم والقسط هيبقوا كام تقريبًا (تقسيط مباشر من غير فوايد).</p>
+      </div>
+      <div class="calc-box">
+        <label>سعر الوحدة <output id="cPriceV"></output><input id="cPrice" type="range" min="1000000" max="30000000" step="100000" value="5000000"></label>
+        <label>المقدم <output id="cDownV"></output><input id="cDown" type="range" min="5" max="50" step="5" value="10"></label>
+        <label>عدد السنين <output id="cYearsV"></output><input id="cYears" type="range" min="1" max="10" step="1" value="7"></label>
+        <div class="calc-out"><div><span>المقدم</span><b id="cDownAmt"></b></div><div><span>القسط الشهري</span><b id="cMonthly"></b></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="why" class="section">
+    <div class="wrap">
+      <h2>ليه {{ c.name }}؟</h2>
+      <div class="why">
+        <div><span>⚖️</span><b>أوراق متراجعة</b><p>كل وحدة بيراجعها مستشار قانوني قبل ما تتعرض.</p></div>
+        <div><span>🤝</span><b>تفاوض لصالحك</b><p>بنفاوض على السعر وخطة السداد بالنيابة عنك.</p></div>
+        <div><span>⚡</span><b>رد في دقايق</b><p>المساعد الذكي شغال 24 ساعة، وفريقنا يكلمك في نفس اليوم.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <footer id="contact" class="footer">
+    <div class="wrap foot-in">
+      <div>
+        <div class="logo"><span class="mark">م+</span>{{ c.name }}</div>
+        <p>{{ c.address }}</p>
+        <p>{{ c.hours }}</p>
+        <p dir="ltr" class="ltr-right">{{ c.phone }}</p>
+      </div>
+      <a class="btn btn-wa" href="https://wa.me/{{ c.whatsapp }}" target="_blank" rel="noopener">واتساب</a>
+    </div>
+    <p class="demo-note">موقع تجريبي لعرض الإمكانيات — كل الوحدات والأسعار والأسماء وهمية</p>
+  </footer>
+
+  <!-- Property modal -->
+  <dialog id="pModal" class="modal">
+    <button class="x" onclick="this.closest('dialog').close()" aria-label="إغلاق">✕</button>
+    <div id="pBody"></div>
+  </dialog>
+
+  <!-- Lead modal -->
+  <dialog id="lModal" class="modal small">
+    <button class="x" onclick="this.closest('dialog').close()" aria-label="إغلاق">✕</button>
+    <h3>احجز معاينة / استشارة مجانية</h3>
+    <p id="lFor" class="muted"></p>
+    <form id="leadForm" class="form">
+      <input type="hidden" name="listing_id">
+      <input type="hidden" name="source" value="form">
+      <div class="row">
+        <label>الاسم<input name="name" required minlength="2"></label>
+        <label>الموبايل<input name="phone" required inputmode="tel" dir="ltr" placeholder="01xxxxxxxxx"></label>
+      </div>
+      <div class="row">
+        <label>ميزانيتك
+          <select name="budget">
+            <option value="0">مش محددة</option><option value="3000000">لحد 3 مليون</option><option value="6000000">3 - 6 مليون</option>
+            <option value="10000000">6 - 10 مليون</option><option value="20000000">10 - 20 مليون</option><option value="50000000">أكتر من 20 مليون</option>
+          </select>
+        </label>
+        <label>هتشتري إمتى؟
+          <select name="timeline" required>{% for t in timelines %}<option>{{ t }}</option>{% endfor %}</select>
+        </label>
+      </div>
+      <label>طريقة الدفع
+        <select name="payment" required>{% for p in payments %}<option>{{ p }}</option>{% endfor %}</select>
+      </label>
+      <label>ملاحظات<textarea name="notes" rows="2" placeholder="أي تفاصيل تحب نعرفها"></textarea></label>
+      <button class="btn btn-block">إرسال</button>
+      <p class="form-msg" role="status"></p>
+    </form>
+  </dialog>
+
+  <!-- Chat -->
+  <button id="chatFab" class="chat-fab" aria-label="افتح المساعد">💬</button>
+  <div id="chatBox" class="chat" hidden>
+    <div class="chat-head">
+      <div><b>المستشار الذكي</b><small>● بيدوّرلك في كل الوحدات</small></div>
+      <button class="x" aria-label="إغلاق" onclick="Chat.close()">✕</button>
+    </div>
+    <div id="chatLog" class="chat-log" aria-live="polite"></div>
+    <div id="chatSug" class="chat-sug"></div>
+    <form id="chatForm" class="chat-in">
+      <input id="chatInput" autocomplete="off" maxlength="500" placeholder="قولّي بتدور على إيه...">
+      <button aria-label="إرسال">➤</button>
+    </form>
+  </div>
+
+  <script>window.UNITS = {{ data_json|safe }};</script>
+  <script src="/static/app.js"></script>
+</body>
+</html>
