@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>تقدير أسعار الشقق بالذكاء الاصطناعي — مشروع Machine Learning</title>
+<style>
+:root{--ink:#0f2a4a;--teal:#1b8a7a;--mint:#7ee0c8;--bg:#f4f7fa;--card:#fff;--mut:#5b6b7c;--line:#e3e9ef;--gold:#f2b544}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",Tahoma,"DejaVu Sans",Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+header{background:linear-gradient(135deg,#0f2a4a,#17566a 60%,#1b8a7a);color:#fff;padding:22px 0 70px}
+.wrap{max-width:1180px;margin:auto;padding:0 24px}
+nav{display:flex;justify-content:space-between;align-items:center;font-size:14px;opacity:.95}
+nav b{font-size:17px}.tag{background:rgba(255,255,255,.14);padding:4px 12px;border-radius:20px}
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:36px;align-items:center;margin-top:34px}
+h1{font-size:38px;line-height:1.3;margin:0 0 12px}.lead{opacity:.9;font-size:17px;margin:0 0 20px}
+.kpis{display:flex;gap:14px;flex-wrap:wrap}.kpi{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:10px 16px}
+.kpi b{display:block;font-size:22px;color:var(--mint)}.kpi span{font-size:13px;opacity:.85}
+.est{background:var(--card);color:var(--ink);border-radius:18px;padding:22px;box-shadow:0 20px 50px rgba(0,0,0,.25)}
+.est h3{margin:0 0 14px;font-size:19px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 12px}
+label{font-size:13px;color:var(--mut);display:block;margin-bottom:3px}
+select,input{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:9px;font:inherit;font-size:14px;background:#fff}
+.chk{display:flex;gap:16px;margin-top:10px;font-size:14px}.chk label{color:var(--ink);display:flex;gap:6px;align-items:center;margin:0}.chk input{width:auto}
+.res{margin-top:16px;background:linear-gradient(135deg,#eafaf5,#f3fbff);border:1px solid #cdeee4;border-radius:14px;padding:14px 16px}
+.res .p{font-size:30px;font-weight:700;color:var(--teal)}.res small{color:var(--mut);display:block}
+main{margin-top:-40px}.card{background:var(--card);border-radius:16px;padding:24px;box-shadow:0 6px 24px rgba(15,42,74,.07);margin-bottom:22px}
+.card h2{margin:0 0 4px;font-size:21px}.card .sub{color:var(--mut);margin:0 0 18px;font-size:14px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:right}
+th{color:var(--mut);font-weight:600}tr.best td{background:#effaf6;font-weight:700}.badge{background:var(--teal);color:#fff;font-size:11px;padding:2px 8px;border-radius:10px;margin-right:6px}
+.bar{display:flex;align-items:center;gap:10px;margin:7px 0;font-size:14px}.bar span{width:110px}.bar i{height:14px;border-radius:7px;background:linear-gradient(90deg,var(--teal),var(--mint));display:block}
+.bar em{font-style:normal;color:var(--mut);font-size:13px}
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}.step{background:var(--bg);border-radius:12px;padding:14px}
+.step b{display:flex;align-items:center;gap:8px;font-size:15px}.step b:before{content:attr(data-n);background:var(--ink);color:#fff;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:12px}
+.step p{margin:6px 0 0;color:var(--mut);font-size:13px}
+svg text{font-family:inherit}footer{color:var(--mut);font-size:13px;text-align:center;padding:10px 0 30px}
+@media(max-width:900px){.hero,.two{grid-template-columns:1fr}.steps{grid-template-columns:1fr 1fr}h1{font-size:28px}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+ <nav><b>📊 مشروع تعلم آلي</b><span class="tag">Python · scikit-learn · Gradient Boosting</span></nav>
+ <div class="hero">
+  <div>
+   <h1>تقدير سعر الشقة في القاهرة الكبرى بالذكاء الاصطناعي</h1>
+   <p class="lead">نموذج تعلم آلي يتوقع سعر الشقة من مواصفاتها خلال جزء من الثانية، مع شرح كامل لمراحل بناء النموذج وتقييمه.</p>
+   <div class="kpis" id="kpis"></div>
+  </div>
+  <div class="est">
+   <h3>🏠 جرّب النموذج الآن</h3>
+   <div class="grid">
+    <div><label>المنطقة</label><select id="area"></select></div>
+    <div><label>المساحة (م²)</label><input id="size" type="number" value="160" min="60" max="400"></div>
+    <div><label>عدد الغرف</label><select id="beds"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option></select></div>
+    <div><label>الحمامات</label><select id="baths"><option>1</option><option selected>2</option><option>3</option><option>4</option></select></div>
+    <div><label>الدور</label><input id="floor" type="number" value="4" min="0" max="12"></div>
+    <div><label>عمر المبنى (سنوات)</label><input id="age" type="number" value="3" min="0" max="40"></div>
+    <div style="grid-column:1/-1"><label>التشطيب</label><select id="finish"></select></div>
+   </div>
+   <div class="chk"><label><input type="checkbox" id="compound" checked> داخل كمبوند</label><label><input type="checkbox" id="garden"> حديقة خاصة</label></div>
+   <div class="res"><small>السعر المتوقع</small><div class="p" id="price">—</div><small id="range"></small></div>
+  </div>
+ </div>
+</div></header>
+
+<main class="wrap">
+ <div class="card"><h2>مراحل المشروع</h2><p class="sub">نفس المنهجية التي أتبعها مع بيانات العملاء الحقيقية</p>
+  <div class="steps">
+   <div class="step"><b data-n="1">تنظيف البيانات</b><p id="clean"></p></div>
+   <div class="step"><b data-n="2">هندسة الخصائص</b><p>تحويل المنطقة والتشطيب لمتغيرات رقمية، واستخدام لوغاريتم السعر.</p></div>
+   <div class="step"><b data-n="3">مقارنة النماذج</b><p>3 خوارزميات مع Cross-Validation على 5 أجزاء.</p></div>
+   <div class="step"><b data-n="4">التقييم</b><p>R² و MAE و MAPE على بيانات اختبار لم يرها النموذج.</p></div>
+   <div class="step"><b data-n="5">النشر</b><p>تصدير النموذج ليعمل في المتصفح أو عبر API.</p></div>
+  </div>
+ </div>
+
+ <div class="two">
+  <div class="card"><h2>مقارنة النماذج</h2><p class="sub">على بيانات اختبار منفصلة (<span id="nte"></span> شقة)</p>
+   <table><thead><tr><th>النموذج</th><th>R²</th><th>متوسط الخطأ</th><th>MAPE</th></tr></thead><tbody id="tbl"></tbody></table>
+  </div>
+  <div class="card"><h2>ما الذي يحدد السعر؟</h2><p class="sub">أهمية كل خاصية في قرار النموذج</p><div id="imp"></div></div>
+ </div>
+
+ <div class="two">
+  <div class="card"><h2>السعر الحقيقي مقابل المتوقع</h2><p class="sub">كل نقطة شقة من بيانات الاختبار (بالمليون جنيه)</p><div id="sc"></div></div>
+  <div class="card"><h2>متوسط سعر المتر حسب المنطقة</h2><p class="sub">من البيانات بعد التنظيف</p><div id="ppm"></div></div>
+ </div>
+ <footer>البيانات في هذا العرض مُولَّدة لأغراض التوضيح فقط وليست أسعارًا حقيقية للسوق. — د. عبير عبد الوهاب · Python & Machine Learning</footer>
+</main>
+
+<script>
+const fmt=n=>Math.round(n).toLocaleString('ar-EG');
+let M,R;
+Promise.all([fetch('static/model.json').then(r=>r.json()),fetch('static/report.json').then(r=>r.json())]).then(([m,r])=>{M=m;R=r;init()});
+function predict(x){let s=M.init;for(const t of M.trees){let n=0;while(t.l[n]!==-1)n=x[t.f[n]]<=t.t[n]?t.l[n]:t.r[n];s+=M.lr*t.v[n]}return Math.exp(s)}
+function vec(){const v={size:+size.value,beds:+beds.value,baths:+baths.value,floor:+floor.value,compound:compound.checked?1:0,age:+age.value,garden:garden.checked?1:0};
+ return M.features.map(f=>{if(f in v)return v[f];const[c,val]=f.split('=');return (c==='area'?area.value:finish.value)===val?1:0})}
+function update(){const p=predict(vec()),e=R.results.at(-1).mape/100;
+ price.textContent=fmt(p)+' جنيه';range.textContent=`النطاق المتوقع: ${fmt(p*(1-e))} – ${fmt(p*(1+e))} جنيه · سعر المتر ≈ ${fmt(p/ +size.value)}`}
+function init(){
+ area.innerHTML=R.areas.map(a=>`<option>${a}</option>`).join('');finish.innerHTML=R.finishes.map(f=>`<option ${f==='تشطيب كامل'?'selected':''}>${f}</option>`).join('');
+ document.querySelectorAll('.est input,.est select').forEach(e=>e.addEventListener('input',update));update();
+ const b=R.results.at(-1);
+ kpis.innerHTML=[[b.r2,'دقة النموذج R²'],[b.mape+'%','متوسط نسبة الخطأ'],[fmt(R.n_clean),'شقة في التدريب والاختبار'],[M.trees.length,'شجرة قرار']].map(([v,t])=>`<div class="kpi"><b>${v}</b><span>${t}</span></div>`).join('');
+ clean.textContent=`من ${fmt(R.n_raw)} سجل: حذف القيم الناقصة والأسعار الشاذة، فبقي ${fmt(R.n_clean)} سجل صالح.`;nte.textContent=fmt(R.n_test);
+ tbl.innerHTML=R.results.map((r,i)=>`<tr class="${i===R.results.length-1?'best':''}"><td>${r.name}${i===R.results.length-1?'<span class="badge">الأفضل</span>':''}</td><td>${r.r2}</td><td>${fmt(r.mae)} ج</td><td>${r.mape}%</td></tr>`).join('');
+ const mx=R.importance[0][1];imp.innerHTML=R.importance.map(([k,v])=>`<div class="bar"><span>${k}</span><i style="width:${v/mx*60}%"></i><em>${v}%</em></div>`).join('');
+ const pm=Object.entries(R.area_ppm).sort((a,b)=>b[1]-a[1]),pmx=pm[0][1];ppm.innerHTML=pm.map(([k,v])=>`<div class="bar"><span>${k}</span><i style="width:${v/pmx*55}%"></i><em>${fmt(v)} ج/م²</em></div>`).join('');
+ const W=520,H=300,P=38,mxv=Math.max(...R.scatter.flat())*1.05,X=v=>P+v/mxv*(W-P-10),Y=v=>H-P-v/mxv*(H-P-10);
+ let s=`<svg viewBox="0 0 ${W} ${H}" width="100%" direction="ltr"><line x1="${X(0)}" y1="${Y(0)}" x2="${X(mxv)}" y2="${Y(mxv)}" stroke="#f2b544" stroke-width="2" stroke-dasharray="6 5"/>`;
+ for(let t=0;t<=mxv;t+=Math.ceil(mxv/5)){s+=`<text x="${X(t)}" y="${H-P+18}" font-size="11" fill="#5b6b7c" text-anchor="middle">${t}</text><text x="${P-6}" y="${Y(t)+4}" font-size="11" fill="#5b6b7c" text-anchor="end">${t}</text><line x1="${P}" x2="${W-10}" y1="${Y(t)}" y2="${Y(t)}" stroke="#eef2f6"/>`}
+ s+=R.scatter.map(([a,p])=>`<circle cx="${X(a)}" cy="${Y(p)}" r="3.4" fill="#1b8a7a" fill-opacity=".55"/>`).join('');
+ s+=`<text x="${W/2}" y="${H-4}" font-size="12" fill="#0f2a4a" text-anchor="middle">السعر الحقيقي</text><text x="12" y="${H/2}" font-size="12" fill="#0f2a4a" transform="rotate(-90 12 ${H/2})" text-anchor="middle">المتوقع</text></svg>`;sc.innerHTML=s}
+</script>
+</body>
+</html>
