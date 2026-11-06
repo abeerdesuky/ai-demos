@@ -1,0 +1,7 @@
+body{direction:rtl}
+.svc .wp-block-group{transition:.2s} .svc .wp-block-group:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(0,0,0,.08)}
+.icon{font-size:38px;line-height:1}
+.wa-float{position:fixed;left:22px;bottom:22px;background:#25d366;color:#fff;border-radius:50px;padding:12px 20px;font-weight:700;text-decoration:none;box-shadow:0 8px 20px rgba(0,0,0,.2);z-index:99}
+.stat strong{display:block;font-size:42px;color:#c8963e;line-height:1.2}
+main.wp-block-group > .entry-content > *, .entry-content > .alignfull{margin-block-start:0!important;margin-top:0!important}
+.wp-site-blocks > footer{margin-block-start:0}

@@ -1,0 +1,6 @@
+{"$schema":"https://schemas.wp.org/trunk/theme.json","version":3,
+"settings":{"typography":{"fontFamilies":[{"fontFamily":"Cairo, sans-serif","slug":"cairo","name":"Cairo","fontFace":[{"fontFamily":"Cairo","fontWeight":"200 1000","fontStyle":"normal","src":["file:./assets/fonts/Cairo.ttf"]}]}]},
+"color":{"palette":[{"slug":"base","color":"#ffffff","name":"Base"},{"slug":"contrast","color":"#1d2433","name":"Contrast"},{"slug":"accent-1","color":"#c8963e","name":"Gold"},{"slug":"accent-2","color":"#f6f1e9","name":"Sand"},{"slug":"accent-3","color":"#22303f","name":"Navy"},{"slug":"accent-4","color":"#6b7280","name":"Muted"}]},
+"layout":{"contentSize":"760px","wideSize":"1200px"}},
+"styles":{"typography":{"fontFamily":"var(--wp--preset--font-family--cairo)","lineHeight":"1.8"},
+"elements":{"heading":{"typography":{"fontFamily":"var(--wp--preset--font-family--cairo)","fontWeight":"800","letterSpacing":"0"}},"button":{"color":{"background":"#c8963e","text":"#ffffff"},"border":{"radius":"10px"},"typography":{"fontWeight":"700"}}}}}
